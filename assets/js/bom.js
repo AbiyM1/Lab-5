@@ -49,3 +49,25 @@ var State = document.querySelector('div > div:nth-child(8) > :nth-child(2) > spa
 
 // Display the BOM Information on the innerHTML of the elements
 
+
+
+Href.innerHTML = window.location.href;
+Protocol.innerHTML = window.location.protocol
+Host.innerHTML = window.location.host
+Port.innerHTML = window.location.port
+Hostname.innerHTML = window.location.hostname
+
+
+Appname.innerHTML = window.navigator.appName
+Appversion.innerHTML = window.navigator.appVersion
+Platform.innerHTML = window.navigator.userAgent
+Language.innerHTML = window.navigator.language
+CookieEnabled.innerHTML = window.navigator.cookieEnabled
+
+
+Height.innerHTML = window.screen.height
+Width.innerHTML = window.screen.width
+PixelDepth.innerHTML = window.screen.pixelDepth
+
+Length.innerHTML = window.history.length
+State.innerHTML = window.history.state
