@@ -83,21 +83,28 @@ function clearAllTasks() {
 }
 
 
-
 // Filter tasks function definition 
 function filterTasks(e) {
 
     filter.addEventListener('keyup', (e) => {
-        const userInput = e.target.value.toLowerCase();
+        const userInput = e.target.value;
         const lists = taskList.getElementsByTagName('li');
         Array.from(lists).forEach((item) => {
             const val = item.textContent;
-            if (val.toLowerCase().indexOf(userInput) != -1) {
+            if (val.indexOf(userInput) != -1) {
                 item.style.display = 'block';
-            } else item.style.display = 'none';
+            } else {
+                item.style.display = 'none';
+                var label = document.querySelector('body > table > tbody > tr:nth-child(62) > td.line-content > span:nth-child(1)');
+                label.innerHTML = "Item not found"
+                
+                
+                
+            }
+            
         });
     });
-
+    
 }
 
 // Remove Task function definition 
@@ -105,7 +112,7 @@ function removeTask(e) {
     if (e.target.parentElement.classList.contains('delete-item')) {
         if (confirm('Are You Sure about that ?')) {
             e.target.parentElement.parentElement.remove();
-
+            
         }
 
     }
