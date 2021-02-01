@@ -1,11 +1,15 @@
 // Define UI Variables 
 const taskInput = document.querySelector('#task'); //the task input text field
 const form = document.querySelector('#task-form'); //The form at the top
-const filter = document.querySelector('#filter'); //the task filter text field
 const taskList = document.querySelector('.collection'); //The UL
 const clearBtn = document.querySelector('.clear-tasks'); //the all task clear button
 
 const reloadIcon = document.querySelector('.fa'); //the reload button at the top navigation 
+
+const filter = document.querySelector('#filter'); //the task filter text field
+
+
+
 
 // Add Event Listener  [Form , clearBtn and filter search input ]
 
@@ -19,6 +23,9 @@ filter.addEventListener('keyup', filterTasks);
 taskList.addEventListener('click', removeTask);
 // Event Listener for reload 
 reloadIcon.addEventListener('click', reloadPage);
+
+
+
 
 
 
@@ -80,18 +87,16 @@ function clearAllTasks() {
 // Filter tasks function definition 
 function filterTasks(e) {
 
-    /*  
-    Instruction for Handling the Search/filter 
-    
-    1. Receive the user input from the text input 
-    2. Assign it to a variable so the us can reuse it 
-    3. Use the querySelectorAll() in order to get the collection of li which have  .collection-item class 
-    4. Iterate over the collection item Node List using forEach
-    5. On each element check if the textContent of the li contains the text from User Input  [can use indexOf]
-    6 . If it contains , change the display content of the element as block , else none
-    
-    
-    */
+    filter.addEventListener('keyup', (e) => {
+        const userInput = e.target.value.toLowerCase();
+        const lists = taskList.getElementsByTagName('li');
+        Array.from(lists).forEach((item) => {
+            const val = item.textContent;
+            if (val.toLowerCase().indexOf(userInput) != -1) {
+                item.style.display = 'block';
+            } else item.style.display = 'none';
+        });
+    });
 
 }
 
