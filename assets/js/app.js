@@ -19,8 +19,7 @@ let DB;
 
 // Add Event Listener [on Load]
 document.addEventListener('DOMContentLoaded', () => {
-
-    // create the database
+    
     let TasksDB = indexedDB.open('tasks', 1);
 
     // if there's an error
@@ -54,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // createindex: 1) field name 2) keypath 3) options
-        objectStore.createIndex('taskname', 'taskname', {
+        objectStore.createIndex('taskName', 'taskName', {
             unique: false
         });
 
@@ -68,8 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function addNewTask(e) {
         e.preventDefault();
         // create a new object with the form info
+        if (taskInput.value === '') {
+            taskInput.style.borderColor = "red";
+
+            return;
+        }
+        
         let newTask = {
-            taskname: taskInput.value
+            taskname: taskInput.value,
         }
         // Insert the object into the database 
         let transaction = DB.transaction(['tasks'], 'readwrite');
@@ -92,28 +97,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    function displayTaskList() {
-        // clear the previous task list
-        while (taskList.firstChild) {
-            taskList.removeChild(taskList.firstChild);
-        }
+    // function displayTaskList() {
+    //     // clear the previous task list
+    //     while (taskList.firstChild) {
+    //         taskList.removeChild(taskList.firstChild);
+    //     }
 
-        // create the object store
-        let objectStore = DB.transaction('tasks').objectStore('tasks');
+    //     // create the object store
+    //     let objectStore = DB.transaction('tasks').objectStore('tasks');
 
-        objectStore.openCursor().onsuccess = function (e) {
-            // assign the current cursor
-            let cursor = e.target.result;
+    //     objectStore.openCursor().onsuccess = function (e) {
+    //         // assign the current cursor
+    //         let cursor = e.target.result;
 
-            if (cursor) {
+    //         if (cursor) {
                 
-                li.setAttribute('data-task-id', cursor.value.id);
-                // Create text node and append it 
-                li.appendChild(document.createTextNode(cursor.value.taskname));……...
-                cursor.continue();
-            }
-        }
-    }
+    //             li.setAttribute('data-task-id', cursor.value.id);
+    //             // Create text node and append it 
+    //             li.appendChild(document.createTextNode(cursor.value.taskname));
+    //             cursor.continue();
+    //         }
+    //     }
+    // }
 
 
 
@@ -151,20 +156,18 @@ document.addEventListener('DOMContentLoaded', () => {
     taskList.addEventListener('click', removeTask);
 
     function removeTask(e) {
+        let taskID = Number(e.target.parentElement.parentElement.getAttribute('data-task-id'))
+        let transaction = DB.transaction(['tasks'], 'readwrite');
+        let objectStore = DB.transaction('tasks', 'readwrite').objectStore('tasks')
 
         if (e.target.parentElement.classList.contains('delete-item')) {
             if (confirm('Are You Sure about that ?')) {
-                // get the task id
-                let taskID = Number(e.target.parentElement.parentElement.getAttribute('data-task-id'));
-                // use a transaction
-                let transaction = DB.transaction(['tasks'], 'readwrite');
-                let objectStore = transaction.objectStore('tasks');
+                e.target.parentElement.parentElement.remove()
                 objectStore.delete(taskID);
 
                 transaction.oncomplete = () => {
                     e.target.parentElement.parentElement.remove();
                 }
-
             }
         }
     }
@@ -183,5 +186,19 @@ document.addEventListener('DOMContentLoaded', () => {
         location.reload()
     })
 
+    filter.addEventListener('keyup', (e) => {
+        
+        const searchInput = e.target.value.toLowerCase();
+        const listItems = taskList.getElementsByTagName('li');
+        Array.from(listItems).forEach((listItem) => {
+            const listItemTextContext = listItem.textContent;
+            if (listItemTextContext.toLowerCase().indexOf(searchInput) != -1) {
+                listItem.style.display = 'block';
+            } else listItem.style.display = 'none';
+        })
+    })
+
+
+    
 
 });
